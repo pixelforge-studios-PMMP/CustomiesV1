@@ -30,17 +30,24 @@ class CollisionBoxComponent implements BlockComponent {
 	}
 
 	public function getValue(): CompoundTag {
+		$minX = $this->origin->getX(); 
+        $minY = $this->origin->getY();
+        $minZ = $this->origin->getZ();
+
+        $maxX = $this->origin->getX() + $this->size->getX();
+        $maxY = $this->origin->getY() + $this->size->getY();
+        $maxZ = $this->origin->getZ() + $this->size->getZ();
+
+		$boxDefinition = CompoundTag::create()
+        ->setTag("minX", new FloatTag($minX))
+        ->setTag("minY", new FloatTag($minY))
+        ->setTag("minZ", new FloatTag($minZ))
+        ->setTag("maxX", new FloatTag($maxX))
+        ->setTag("maxY", new FloatTag($maxY))
+        ->setTag("maxZ", new FloatTag($maxZ));
+
 		return CompoundTag::create()
 			->setByte("enabled", $this->useCollisionBox ? 1 : 0)
-			->setTag("origin", new ListTag([
-				new FloatTag($this->origin->getX()),
-				new FloatTag($this->origin->getY()),
-				new FloatTag($this->origin->getZ())
-			]))
-			->setTag("size", new ListTag([
-				new FloatTag($this->size->getX()),
-				new FloatTag($this->size->getY()),
-				new FloatTag($this->size->getZ())
-			]));
+            ->setTag("boxes", new ListTag([$boxDefinition]));
 	}
 }
